@@ -40,11 +40,15 @@ const PhoneCard = ({ phone }: { phone: Phone }) => {
 
   return (
     <Box>
-      <Card sx={{ maxWidth: 345, cursor: "pointer" }} onClick={handleOpen}>
+      <Card sx={{ width: 600, cursor: "pointer" }} onClick={handleOpen}>
         <CardMedia
           component="img"
           height="140"
-          image={phone.photo || "default-contact-image.jpg"}
+          sx={{ objectFit: "contain" }}
+          image={
+            phone.photo ||
+            "https://png.klev.club/uploads/posts/2024-05/png-klev-club-ezv6-p-kontakti-ikonka-png-1.png"
+          }
           alt="Contact"
         />
         <CardContent>
@@ -91,7 +95,11 @@ const PhoneCard = ({ phone }: { phone: Phone }) => {
                 "https://png.klev.club/uploads/posts/2024-05/png-klev-club-ezv6-p-kontakti-ikonka-png-1.png"
               }
               alt="Contact"
-              style={{ maxWidth: "100%", height: "auto", borderRadius: "8px" }}
+              style={{
+                maxWidth: "auto%",
+                height: "140px",
+                borderRadius: "8px",
+              }}
             />
           </Box>
 

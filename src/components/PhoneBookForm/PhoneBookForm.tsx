@@ -11,24 +11,27 @@ import {
 import {
   addNewContact,
   fetchContactById,
+  fetchPhonesFromDB,
   updateContact,
 } from "../../store/thunks/phoneBookThunk.ts";
 import { Phone } from "../../typed";
+
+const initialState = {
+  name: "",
+  phone: "",
+  email: "",
+  photo: "",
+};
 
 const PhoneBookForm = () => {
   const { id } = useParams<string>();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { contactToEdit, fetchLoading, addingLoading, updatingLoading, error } =
+  const { contactToEdit, fetchLoading, updatingLoading, error } =
     useAppSelector((state) => state.phones);
 
-  const [formData, setFormData] = useState<Phone>({
-    name: "",
-    phone: "",
-    email: "",
-    photo: "",
-  });
+  const [formData, setFormData] = useState<Phone>(initialState);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -45,6 +48,8 @@ const PhoneBookForm = () => {
       dispatch(updateContact(updatedData));
     } else {
       dispatch(addNewContact(formData));
+      dispatch(fetchPhonesFromDB());
+      setFormData(initialState);
       navigate("/");
     }
   };
@@ -52,6 +57,8 @@ const PhoneBookForm = () => {
   useEffect(() => {
     if (id) {
       dispatch(fetchContactById(id));
+    } else {
+      setFormData(initialState);
     }
   }, [id, dispatch]);
 
@@ -64,10 +71,6 @@ const PhoneBookForm = () => {
   const imagePreview =
     formData.photo ||
     "https://png.klev.club/uploads/posts/2024-05/png-klev-club-ezv6-p-kontakti-ikonka-png-1.png";
-
-  if (fetchLoading && id) {
-    return <CircularProgress />;
-  }
 
   return (
     <Box sx={{ maxWidth: 400, margin: "0 auto", padding: 2 }}>
@@ -134,9 +137,9 @@ const PhoneBookForm = () => {
           variant="contained"
           color="primary"
           fullWidth
-          disabled={addingLoading || updatingLoading}
+          disabled={fetchLoading || updatingLoading}
         >
-          {addingLoading ? (
+          {fetchLoading || updatingLoading ? (
             <CircularProgress size={24} />
           ) : id ? (
             "Update Contact"
@@ -144,6 +147,7 @@ const PhoneBookForm = () => {
             "Add Contact"
           )}
         </Button>
+
         {error && <Typography color="error">Error</Typography>}
       </form>
     </Box>
