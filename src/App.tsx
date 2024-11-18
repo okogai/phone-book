@@ -5,7 +5,6 @@ import PhoneBookForm from "./components/PhoneBookForm/PhoneBookForm.tsx";
 const App = () => {
   return (
     <>
-      <PhoneBookForm />
       <Routes>
         <Route path="/" element={<PhoneBookList />} />
         <Route path="/add" element={<PhoneBookForm />} />

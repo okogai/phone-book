@@ -41,7 +41,8 @@ const PhoneBookForm = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (id) {
-      dispatch(updateContact(formData));
+      const updatedData = { ...formData, id };
+      dispatch(updateContact(updatedData));
     } else {
       dispatch(addNewContact(formData));
       navigate("/");
@@ -52,10 +53,13 @@ const PhoneBookForm = () => {
     if (id) {
       dispatch(fetchContactById(id));
     }
-    if (contactToEdit !== null) {
+  }, [id, dispatch]);
+
+  useEffect(() => {
+    if (contactToEdit) {
       setFormData(contactToEdit);
     }
-  }, [id, contactToEdit, dispatch]);
+  }, [contactToEdit]);
 
   const imagePreview =
     formData.photo ||
@@ -140,7 +144,7 @@ const PhoneBookForm = () => {
             "Add Contact"
           )}
         </Button>
-        {error && <Typography color="error">An error occurred</Typography>}
+        {error && <Typography color="error">Error</Typography>}
       </form>
     </Box>
   );

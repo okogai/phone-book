@@ -5,8 +5,17 @@ import { Phone } from "../../typed";
 export const fetchPhonesFromDB = createAsyncThunk<Phone[]>(
   "phones/fetchPhonesFromDB",
   async () => {
-    const response = await axiosAPI("phones.json");
-    return response.data;
+    const response = await axiosAPI("/phones.json");
+    if (response.data) {
+      const phonesArray: Phone[] = Object.keys(response.data).map((key) => ({
+        id: key,
+        ...response.data[key],
+      }));
+
+      return phonesArray;
+    } else {
+      return [];
+    }
   },
 );
 
@@ -35,7 +44,7 @@ export const updateContact = createAsyncThunk<void, Phone>(
 export const deleteContact = createAsyncThunk<void, string>(
   "contacts/deleteContact",
   async (id: string, { dispatch }) => {
-    await axiosAPI.delete(`phones/${id}`);
+    await axiosAPI.delete(`phones/${id}.json`);
     await dispatch(fetchPhonesFromDB());
   },
 );

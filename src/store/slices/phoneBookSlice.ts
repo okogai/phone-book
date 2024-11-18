@@ -55,7 +55,7 @@ export const phoneBookSlice = createSlice({
       })
       .addCase(
         fetchContactById.fulfilled,
-        (state, action: PayloadAction<Phone | null>) => {
+        (state, action: PayloadAction<Phone>) => {
           state.fetchLoading = false;
           state.contactToEdit = action.payload;
         },
