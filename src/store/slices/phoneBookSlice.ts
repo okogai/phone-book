@@ -3,12 +3,14 @@ import { Phone } from "../../typed";
 import {
   addNewContact,
   deleteContact,
+  fetchContactById,
   fetchPhonesFromDB,
   updateContact,
 } from "../thunks/phoneBookThunk.ts";
 
 interface phoneBookState {
   phones: Phone[];
+  contactToEdit: Phone | null;
   fetchLoading: boolean;
   addingLoading: boolean;
   updatingLoading: boolean;
@@ -18,6 +20,7 @@ interface phoneBookState {
 
 const initialState: phoneBookState = {
   phones: [],
+  contactToEdit: null,
   fetchLoading: false,
   addingLoading: false,
   updatingLoading: false,
@@ -43,6 +46,21 @@ export const phoneBookSlice = createSlice({
         },
       )
       .addCase(fetchPhonesFromDB.rejected, (state) => {
+        state.fetchLoading = false;
+        state.error = true;
+      })
+      .addCase(fetchContactById.pending, (state) => {
+        state.fetchLoading = true;
+        state.error = false;
+      })
+      .addCase(
+        fetchContactById.fulfilled,
+        (state, action: PayloadAction<Phone | null>) => {
+          state.fetchLoading = false;
+          state.contactToEdit = action.payload;
+        },
+      )
+      .addCase(fetchContactById.rejected, (state) => {
         state.fetchLoading = false;
         state.error = true;
       })

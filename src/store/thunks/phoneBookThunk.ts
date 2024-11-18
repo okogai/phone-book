@@ -10,10 +10,18 @@ export const fetchPhonesFromDB = createAsyncThunk<Phone[]>(
   },
 );
 
+export const fetchContactById = createAsyncThunk<Phone, string>(
+  "phones/fetchContactById",
+  async (id: string) => {
+    const response = await axiosAPI(`phones/${id}.json`);
+    return response.data;
+  },
+);
+
 export const addNewContact = createAsyncThunk<void, Phone>(
   "phones/addNewContact",
-  async () => {
-    await axiosAPI.post("phones.json");
+  async (newContact: Phone) => {
+    await axiosAPI.post("phones.json", newContact);
   },
 );
 
